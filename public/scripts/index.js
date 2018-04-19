@@ -26,11 +26,12 @@ socket.on('newLocationMessage', function(message){
 
 $('#message-form').on('submit', function(e){
     e.preventDefault();
+    var messageText = $('[name=message]');
     socket.emit('createMessage', {
         from:'Matt',
-        text: $('[name=message]').val()
+        text: messageText.val()
     }, function () {
-        $('[name=message]').val('');
+        messageText.val('');
     });
 });
 
@@ -40,13 +41,19 @@ locationButton.on('click', function(){
     if (!navigator.geolocation){
         return alert('Need a better browser');
     }
+
+    locationButton.attr('disabled', 'disabled').text('Sending...');
+
     navigator.geolocation.getCurrentPosition(function (position) {
         socket.emit('createLocationMessage', {
             lat: position.coords.latitude,
             long: position.coords.longitude
         });
+        locationButton.removeAttr('disabled').text('Send Location');
         console.log(position);
     }, function(){
         alert('Unable to get location');
-    })
+        locationButton.removeAttr('disabled').text('Send Location');
+    });
+
 });

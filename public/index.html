@@ -5,24 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/css/styles.css">
     <title>Document</title>
 </head>
-<body>
-    <h1>
-        Welcome to the chat
-    </h1>
+<body class="chat">
 
-    <div>
-        <ol id="thread">
+    <div class="chat__sidebar">
+        <h3>
+            People
+        </h3>
+        <div id="users">
 
-        </ol>
+        </div>
     </div>
-    <form id="message-form">
-        <input type="text" name="message" id="message" placeholder="Type Message">
-        <button type="submit">Send</button>
-    </form>
 
-    <button id="send-location">Send Location</button>
+    <div class="chat__main">
+        <ol id="thread" class="chat__messages"></ol>
+
+        <div class="chat__footer">
+            <form id="message-form">
+                <input type="text" name="message" id="message" placeholder="Type Message" autofocus autocomplete="off">
+                <button>Send</button>
+            </form>
+            <button id="send-location">Send Location</button>
+        </div>
+    </div>
+    
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="/scripts/index.js"></script>
