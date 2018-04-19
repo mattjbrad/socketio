@@ -1,4 +1,23 @@
 var socket = io();
+
+function scrollToBottom(){
+
+    //Selectors
+    var thread = $('#thread');
+    var newMessage = thread.children('li:last-child');
+
+    //Heights
+    var clientHeight = thread.prop('clientHeight');
+    var scrollTop = thread.prop('scrollTop');
+    var scrollHeight = thread.prop('scrollHeight');
+    var newMessageHeight = newMessage.innerHeight();
+    var lastMessageHeight = newMessage.prev().innerHeight();
+
+    if ((clientHeight+scrollTop+newMessageHeight+lastMessageHeight) >= scrollHeight) {
+        thread.scrollTop(scrollHeight);
+    }
+}
+
 socket.on('connect', function () {
     console.log('connected to server')
 });
@@ -8,12 +27,9 @@ socket.on('disconnect', function (){
 });
 
 socket.on('newMessage', function (message){
-     var formattedTime = moment(message.createdAt).format('h:mm a');
-    // var li = $('<li></li>');
-    // li.text(`${message.from} ${formattedTime} : ${message.text}`);
-    // $('#thread').append(li);
-
+    var formattedTime = moment(message.createdAt).format('h:mm a');
     var template = $('#message-template').html();
+
     var html = Mustache.render(template, {
         text:message.text,
         createdAt: formattedTime,
@@ -21,19 +37,13 @@ socket.on('newMessage', function (message){
     });
 
     $('#thread').append(html);
+    scrollToBottom();
 });
 
 socket.on('newLocationMessage', function(message){
-    // var li = $('<li></li>');
-    // var a = $('<a target="_blank">My Current Location</a>');
-    var formattedTime = moment(message.createdAt).format('h:mm a');
 
+    var formattedTime = moment(message.createdAt).format('h:mm a');
     var template = $('#location-message-template').html();
-    
-    // li.text(`${message.from} ${formattedTime} : `);
-    // a.attr('href', message.url);
-    // li.append(a);
-    // $('#thread').append(li);
 
     var html = Mustache.render(template, {
         url:message.url,
@@ -42,6 +52,8 @@ socket.on('newLocationMessage', function(message){
     });
 
     $('#thread').append(html);
+    scrollToBottom();
+
 });
 
 
